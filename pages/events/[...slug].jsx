@@ -1,37 +1,51 @@
-import { useRouter } from 'next/router'
-import {getQueriedHikeEvents} from '../../data/HikeData'
 import HikeCard from '../../components/cards/HikeCard'
+import { useRouter } from 'next/router'
+import { getTrails } from '../../data/api-data'
 
-export default function FilteredTrails() {
+
+export default function FilteredTrails({trails}) {
   const router = useRouter()
-  const { slug } = router.query
-  
+  const { query } = router
+  const slug = query.slug
 
   if(!slug) {
-    return <p>Oops! Something went wrong. Please try again</p>
+    return <h1>No slug</h1>
   }
 
-  const query = slug[1]
+  console.log(slug)
 
-  
-  const queriedHikeEvents = getQueriedHikeEvents(query)
+  const availableLocations = [
+    "Japan",
+    "Australia",
+    "USA", 
+    "New Zealand",
+  ]
 
-  if (queriedHikeEvents.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center">
-        <h2 className="my-8 text-5xl font-semibold">
-          No Hikes Found
-        </h2>
-      </div>
-    )
+  if(availableLocations.includes(slug[1]) === false) {
+    return <h1>Sorry, there are no trails for this location yet.</h1>
   }
-  
+
+  console.log(trails)
 
   return (
     <div>
-      {queriedHikeEvents.map((event) => (
-        <HikeCard event={event} key={event.id} />
+      <h2 className="my-10 text-3xl text-center">Here are all upcoming events in {slug[0]}: {slug[1]}!</h2>
+      {trails.map((trail) => (
+        <HikeCard trail={trail} key={trail.id} />
       ))}
     </div>
   )
 }
+
+export const getServerSideProps = async (ctx) => {
+  const slug = ctx.query.slug
+  const country = slug[1]
+  const trails = await getTrails(country)
+  return {
+    props: {
+      trails
+    }
+  }
+}
+
+
