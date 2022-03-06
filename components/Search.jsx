@@ -18,7 +18,7 @@ export default function Search(props) {
       <form onSubmit={handleSubmit} action="">
         <div className="my-4">
         <label htmlFor="country">Country:</label>
-        <select ref={searchRef} className='border px-1 py-1 mx-1 rounded-md' name="country" id="country">
+        <select ref={searchRef} className='border px-1 py-1 mx-1 rounded-md dark:text-slate-600' name="country" id="country">
           <option value="Japan">Japan</option>
           <option value="USA">USA</option>
           <option value="Australia">Australia</option>
